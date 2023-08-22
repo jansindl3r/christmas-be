@@ -4,18 +4,23 @@ from christmas.models import Group, Wish, User
 from christmas.serializers import MemberSerializer, GroupSerializer, WishSerializer, CommentSerializer
 
 @api_view(["GET"])
-def members_view(request):
-    group = GroupSerializer(instance=Group.objects.first())
-    return Response(group.data)
+def members_view(request, group_name):
+    try:
+        group = Group.objects.get(name__iexact=group_name)
+        group_serializer = GroupSerializer(instance=group)
+        return Response(group_serializer.data)
+    except Group.DoesNotExist:
+        return Response(status=500)
 
 @api_view(["GET"])
-def wishes_view(request, identifier):
+def wishes_view(request, group_name, identifier):
+    group = Group.objects.get(name__iexact=group_name)
     wish = WishSerializer(instance=Wish.objects.all(), many=True)
     return Response(wish.data)
 
 @api_view(["POST"])
-def comment_view(request):
-    print(request.data)
+def comment_view(request, group_name):
+    group = Group.objects.get(name__iexact=group_name)
     serializer = CommentSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -26,9 +31,7 @@ def comment_view(request):
     # return Response(wish.data)
 
 @api_view(["DELETE", "POST"])
-def wish_view(request, identifier = None):
-    print(request.data)
-    print(request.method)
+def wish_view(request, group_name, identifier = None):
     if request.method == "DELETE":
         Wish.objects.get(identifier=identifier).delete()
         return Response({})
@@ -40,3 +43,4 @@ def wish_view(request, identifier = None):
         else:
             print(serializer.errors)
             return Response(serializer.errors)
+    
