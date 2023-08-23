@@ -14,9 +14,12 @@ def members_view(request, group_name):
 
 @api_view(["GET"])
 def wishes_view(request, group_name, identifier):
-    group = Group.objects.get(name__iexact=group_name)
-    wish = WishSerializer(instance=Wish.objects.all(), many=True)
-    return Response(wish.data)
+    try:
+        group = Group.objects.get(name__iexact=group_name)
+        wish = WishSerializer(instance=Wish.objects.all(), many=True)
+        return Response(wish.data)
+    except Group.DoesNotExist:
+        return Response(status=500)
 
 @api_view(["POST"])
 def comment_view(request, group_name):

@@ -17,6 +17,7 @@ class Wish(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="wishes")
     identifier = models.UUIDField(default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    contributors = models.ManyToManyField(User)
 
     class Meta:
         verbose_name_plural = "Wishes"

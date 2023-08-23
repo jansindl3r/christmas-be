@@ -41,10 +41,16 @@ class WishSerializer(serializers.ModelSerializer):
         queryset=User.objects.all(),
         slug_field="identifier"
     )
+    contributor_identifiers = serializers.SlugRelatedField(
+        source='contributors',
+        queryset=User.objects.all(),
+        slug_field="identifier",
+        many=True
+    )
     comments = CommentSerializer(read_only=True, many=True)
     class Meta:
         model = Wish
-        fields = ("identifier", "user", "user_identifier", "comments", "name", "created_at")
+        fields = ("identifier", "user", "user_identifier", "comments", "name", "created_at", "contributor_identifiers")
         read_only_fields = ("created_at",)
         
 
