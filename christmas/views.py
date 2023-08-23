@@ -33,8 +33,8 @@ def comment_view(request, group_name):
     # wish = WishSerializer(instance=Wish.objects.all(), many=True)
     # return Response(wish.data)
 
-@api_view(["DELETE", "POST"])
-def wish_view(request, group_name, identifier = None):
+@api_view(["DELETE", "POST", "PUT"])
+def wish_view(request, identifier = None):
     if request.method == "DELETE":
         Wish.objects.get(identifier=identifier).delete()
         return Response({})
@@ -46,4 +46,13 @@ def wish_view(request, group_name, identifier = None):
         else:
             print(serializer.errors)
             return Response(serializer.errors)
+    elif request.method == "PUT":
+        wish = Wish.objects.get(identifier=identifier)
+        serializer = WishSerializer(instance=wish, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=500)
+
     

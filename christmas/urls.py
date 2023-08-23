@@ -10,7 +10,7 @@ from christmas.views import (
 urlpatterns = [
     path("<group_name>/members/", members_view),
     path("<group_name>/wishes/<uuid:identifier>/", wishes_view),
-    path("<group_name>/wish/<uuid:identifier>/", wish_view),
-    path("<group_name>/wish/", wish_view),
+    path("wish/<uuid:identifier>/", wish_view),
+    path("wish/", wish_view),
     path("<group_name>/comment/", comment_view),
 ]

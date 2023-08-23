@@ -50,7 +50,7 @@ class WishSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(read_only=True, many=True)
     class Meta:
         model = Wish
-        fields = ("identifier", "user", "user_identifier", "comments", "name", "created_at", "contributor_identifiers")
+        fields = ("identifier", "user", "user_identifier", "comments", "name", "created_at", "contributor_identifiers", "done")
         read_only_fields = ("created_at",)
         
 

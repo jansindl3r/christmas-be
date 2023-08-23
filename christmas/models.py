@@ -18,12 +18,18 @@ class Wish(models.Model):
     identifier = models.UUIDField(default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     contributors = models.ManyToManyField(User)
+    done = models.BooleanField(default=False)
 
     class Meta:
         verbose_name_plural = "Wishes"
+        ordering = ["created_at"]
+
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
     wish = models.ForeignKey(Wish, on_delete=models.CASCADE, related_name="comments")
     content = models.fields.TextField(max_length=512)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
